@@ -7,6 +7,7 @@ docker run --detach --rm --name openldap   --network my-network   --env LDAP_ADM
 
 
 ## python code
+```bash
 from ldap3 import Server, Connection, ALL, SUBTREE, MODIFY_REPLACE
 from ldap3.core.exceptions import LDAPException, LDAPBindError
 
@@ -54,9 +55,10 @@ def main():
 
 if __name__ == "__main__":
     main()
-
+```
 
 ## python code 2
+```python
 import sys
 from ldap3 import Server, Connection, ALL, SUBTREE
 from ldap3.core.exceptions import LDAPException
@@ -116,3 +118,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+```
