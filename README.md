@@ -8,33 +8,35 @@ docker run --detach --rm --name openldap   --network my-network   --env LDAP_ADM
 
 ## python code
 ```bash
-from ldap3 import Server, Connection, ALL, SUBTREE, MODIFY_REPLACE
+from ldap3 import Server, Connection, ALL, SUBTREE
 from ldap3.core.exceptions import LDAPException, LDAPBindError
 
 # LDAP server details
 LDAP_SERVER = 'localhost'
 LDAP_PORT = 1389  # Default non-privileged port for OpenLDAP
-LDAP_ADMIN_DN = 'cn=admin,dc=example,dc=org'
-LDAP_ADMIN_PASSWORD = 'adminpassword'
+LDAP_USER_DN = 'cn=customuser,ou=users,dc=example,dc=org'  # Updated user DN
+LDAP_USER_PASSWORD = 'custompassword'
 LDAP_BASE_DN = 'dc=example,dc=org'
 
 def connect_and_bind(dn, password):
     try:
         server = Server(LDAP_SERVER, port=LDAP_PORT, use_ssl=False, get_info=ALL)
+        print(f"Attempting to bind with DN: {dn}")
         conn = Connection(server, user=dn, password=password, auto_bind=True)
         print(f"Successfully bound as {dn}")
         return conn
     except LDAPBindError as e:
         print(f"Bind failed for {dn}: {e}")
+        print(f"Server info: {server.info}")
     except LDAPException as e:
         print(f"LDAP error: {e}")
     return None
 
 def main():
-    # First, try to bind as admin
-    conn = connect_and_bind(LDAP_ADMIN_DN, LDAP_ADMIN_PASSWORD)
+    # Try to bind as customuser
+    conn = connect_and_bind(LDAP_USER_DN, LDAP_USER_PASSWORD)
     if not conn:
-        print("Admin bind failed. Please check admin credentials.")
+        print("Custom user bind failed. Please check user credentials and DN.")
         return
 
     # Search for users
